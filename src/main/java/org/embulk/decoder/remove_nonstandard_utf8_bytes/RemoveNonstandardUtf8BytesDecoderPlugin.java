@@ -43,9 +43,6 @@ public class RemoveNonstandardUtf8BytesDecoderPlugin
     @Override
     public FileInput open(TaskSource taskSource, FileInput fileInput)
     {
-        final CharsetDecoder charsetDecoder = StandardCharsets.UTF_8.newDecoder();
-        charsetDecoder.onMalformedInput(CodingErrorAction.IGNORE);
-        charsetDecoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 
         final FileInputInputStream files = new FileInputInputStream(fileInput);
         PluginTask task = taskSource.loadTask(PluginTask.class);
@@ -60,8 +57,7 @@ public class RemoveNonstandardUtf8BytesDecoderPlugin
                         if (!files.nextFile()) {
                             return null;
                         }
-                        Reader reader = new BufferedReader(new InputStreamReader(files, charsetDecoder));
-                        return new ByteArrayInputStream(CharStreams.toString(reader).getBytes(Charsets.UTF_8));
+                        return IgnoreMalformedUTF8InputStream.get(files);
                     }
 
                     public void close()
@@ -71,4 +67,7 @@ public class RemoveNonstandardUtf8BytesDecoderPlugin
                     }
                 });
     }
+
+
+
 }
