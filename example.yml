@@ -1,0 +1,11 @@
+---
+in:
+  type: file
+  path_prefix: /tmp/datas/
+  decoders:
+  - {type: gzip}
+  - {type: remove_nonstandard_utf8_bytes}
+  parser: {type: json, charset: UTF-8, newline: LF}
+exec: {}
+out:
+  {type: "null"}
